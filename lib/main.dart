@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -61,19 +62,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
     double bmiResult = weight / pow(height / 100, 2);
 
-    if (height == null || height <= 0 || weight == null || weight <= 0) {
-      setState(() {
-        _message = "Your height and weigh must be positive numbers";
-      });
-      return;
-    }
+    setState(() {
+      if (height == null || height <= 0 || weight == null || weight <= 0) {
+        _message = "Your height and weight must be positive numbers";
+      }
+    });
 
     setState(() {
       _bmi = bmiResult;
       if (_bmi! < 18.5) {
         _message = "You are underweight";
       } else if (_bmi! < 25) {
-        _message = 'You body is fine';
+        _message = 'You are normal';
       } else if (_bmi! < 30) {
         _message = 'You are overweight';
       } else if (_bmi! < 35) {
@@ -84,6 +84,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void clearUI() {
+    _heightController.clear();
+    _weightController.clear();
+
+    setState(() {
+      _message = "Please enter your height and weight to see your BMI";
+      _bmi = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,11 +101,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("BMI Calculator"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextField(
             controller: _heightController,
             decoration: InputDecoration(
-              labelText: "Height",
+              labelText: "Height (cm)",
               icon: Icon(Icons.trending_up),
             ),
           ),
@@ -103,28 +114,50 @@ class _MyHomePageState extends State<MyHomePage> {
           TextField(
             controller: _weightController,
             decoration: InputDecoration(
-              labelText: "Weight",
+              labelText: "Weight (kg)",
               icon: Icon(Icons.line_weight),
             ),
           ),
-          SizedBox(height: 15),
-          RaisedButton(
-              color: Colors.pinkAccent,
-              child: Text(
-                "Calculate",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: calculateBMI),
+          SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 150,
+            height: 50,
+            child: RaisedButton(
+                color: Colors.green,
+                child: Text(
+                  "Calculate",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: calculateBMI),
+          ),
+          SizedBox(height: 10),
+          SizedBox(
+            width: 150,
+            height: 50,
+            child: RaisedButton(
+                color: Colors.red,
+                child: Text(
+                  "Reset",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: clearUI),
+          ),
           SizedBox(height: 15),
           Text(
-            _bmi == null ? "Enter value" : _bmi!.toStringAsFixed(2),
+            _bmi == null ? "" : "Your BMI is: ${_bmi!.toStringAsFixed(2)}",
             style: TextStyle(
                 color: Colors.redAccent,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
+                fontSize: 25,
+                fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 20),
-          Text(_message)
+          Text(
+            _message,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
         ],
       ),
     );
