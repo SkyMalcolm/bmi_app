@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -48,17 +49,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void calculateBMI() {
+    double height = double.parse(_heightController.text);
+    double weight = double.parse(_weightController.text);
+
+    double bmi = weight / pow(height / 100, 2);
+
+    print(bmi);
   }
 
   @override
@@ -70,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[
           TextField(
+            controller: _heightController,
             decoration: InputDecoration(
               labelText: "Height",
               icon: Icon(Icons.trending_up),
@@ -77,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           SizedBox(height: 20),
           TextField(
+            controller: _weightController,
             decoration: InputDecoration(
               labelText: "Weight",
               icon: Icon(Icons.line_weight),
@@ -89,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 "Calculate",
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: null),
+              onPressed: calculateBMI),
           SizedBox(height: 15),
           Text(
             "Results",
