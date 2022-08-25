@@ -52,13 +52,36 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
 
+  double? _bmi;
+  String _message = "Please enter your height and weight";
+
   void calculateBMI() {
-    double height = double.parse(_heightController.text);
-    double weight = double.parse(_weightController.text);
+    final height = double.parse(_heightController.text);
+    final weight = double.parse(_weightController.text);
 
-    double bmi = weight / pow(height / 100, 2);
+    double bmiResult = weight / pow(height / 100, 2);
 
-    print(bmi);
+    if (height == null || height <= 0 || weight == null || weight <= 0) {
+      setState(() {
+        _message = "Your height and weigh must be positive numbers";
+      });
+      return;
+    }
+
+    setState(() {
+      _bmi = bmiResult;
+      if (_bmi! < 18.5) {
+        _message = "You are underweight";
+      } else if (_bmi! < 25) {
+        _message = 'You body is fine';
+      } else if (_bmi! < 30) {
+        _message = 'You are overweight';
+      } else if (_bmi! < 35) {
+        _message = 'You are obese';
+      } else {
+        _message = 'You are extremely obese';
+      }
+    });
   }
 
   @override
@@ -94,12 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: calculateBMI),
           SizedBox(height: 15),
           Text(
-            "Results",
+            _bmi == null ? "Enter value" : _bmi!.toStringAsFixed(2),
             style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 20,
                 fontWeight: FontWeight.w500),
           ),
+          SizedBox(height: 20),
+          Text(_message)
         ],
       ),
     );
