@@ -83,9 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           SizedBox(height: 15),
+          RaisedButton(
+              color: Colors.pinkAccent,
+              child: Text(
+                "Calculate",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: null),
+          SizedBox(height: 15),
           Text(
-            "Result",
-          )
+            "Results",
+            style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 20,
+                fontWeight: FontWeight.w500),
+          ),
         ],
       ),
     );
