@@ -70,7 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       _bmi = bmiResult;
-      if (_bmi! < 18.5) {
+      if (_bmi! <= 0) {
+        _bmi = null;
+      } else if (_bmi! < 18.5) {
         _message = "You are underweight";
       } else if (_bmi! < 25) {
         _message = 'You are normal';
@@ -146,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           SizedBox(height: 15),
           Text(
-            _bmi == null ? "" : "Your BMI is: ${_bmi!.toStringAsFixed(2)}",
+            _bmi == null ? "0.0" : "Your BMI is: ${_bmi!.toStringAsFixed(2)}",
             style: TextStyle(
                 color: Colors.redAccent,
                 fontSize: 25,
