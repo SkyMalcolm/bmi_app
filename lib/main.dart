@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -48,68 +51,126 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
 
-  void _incrementCounter() {
+  double? _bmi;
+  String _message = "Please enter your height and weight";
+
+  void calculateBMI() {
+    final height = double.parse(_heightController.text);
+    final weight = double.parse(_weightController.text);
+
+    double bmiResult = weight / pow(height / 100, 2);
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      if (height == null || height <= 0 || weight == null || weight <= 0) {
+        _message = "Your height and weight must be positive numbers";
+      }
+    });
+
+    setState(() {
+      _bmi = bmiResult;
+      if (_bmi! <= 0) {
+        _bmi = null;
+      } else if (_bmi! < 18.5) {
+        _message = "You are underweight";
+      } else if (_bmi! < 25) {
+        _message = 'You are normal';
+      } else if (_bmi! < 30) {
+        _message = 'You are overweight';
+      } else if (_bmi! < 35) {
+        _message = 'You are obese';
+      } else {
+        _message = 'You are extremely obese';
+      }
+    });
+  }
+
+  void clearUI() {
+    _heightController.clear();
+    _weightController.clear();
+
+    setState(() {
+      _message = "Please enter your height and weight to see your BMI";
+      _bmi = null;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text("BMI Calculator"),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            controller: _heightController,
+            decoration: InputDecoration(
+              labelText: "Height (cm)",
+              icon: Icon(Icons.trending_up),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+          ),
+          SizedBox(height: 20),
+          TextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            controller: _weightController,
+            decoration: InputDecoration(
+              labelText: "Weight (kg)",
+              icon: Icon(Icons.line_weight),
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 150,
+            height: 50,
+            child: RaisedButton(
+                color: Colors.green,
+                child: Text(
+                  "Calculate",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: calculateBMI),
+          ),
+          SizedBox(height: 10),
+          SizedBox(
+            width: 150,
+            height: 50,
+            child: RaisedButton(
+                color: Colors.red,
+                child: Text(
+                  "Reset",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: clearUI),
+          ),
+          SizedBox(height: 15),
+          Text(
+            _bmi == null ? "0.0" : "Your BMI is: ${_bmi!.toStringAsFixed(2)}",
+            style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 25,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20),
+          Text(
+            _message,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
