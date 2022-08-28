@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:math';
 
 void main() {
@@ -106,6 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
             controller: _heightController,
             decoration: InputDecoration(
               labelText: "Height (cm)",
@@ -114,6 +119,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           SizedBox(height: 20),
           TextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
             controller: _weightController,
             decoration: InputDecoration(
               labelText: "Weight (kg)",
