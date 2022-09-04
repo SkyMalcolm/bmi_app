@@ -60,16 +60,23 @@ class _MyHomePageState extends State<MyHomePage> {
   String _message = "Please enter your height and weight";
 
   void calculateBMI() {
+    if (_heightController.text == null ||
+        _heightController.text.isEmpty ||
+        _heightController.text == "0" ||
+        _weightController.text == "0" ||
+        _weightController.text.isEmpty ||
+        _weightController.text == null) {
+      print("Null!!");
+      setState(() {
+        _message = "Your height and weight must be valid numbers";
+      });
+      return;
+    }
+
     final height = double.parse(_heightController.text);
     final weight = double.parse(_weightController.text);
 
     double bmiResult = weight / pow(height / 100, 2);
-
-    setState(() {
-      if (height == null || height <= 0 || weight == null || weight <= 0) {
-        _message = "Your height and weight must be positive numbers";
-      }
-    });
 
     setState(() {
       _bmi = bmiResult;
@@ -119,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Text(
             _message,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            textAlign: TextAlign.center,
           ),
           SizedBox(height: 40),
           Platform.isAndroid
