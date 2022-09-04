@@ -168,40 +168,42 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 20,
           ),
           SizedBox(
-              width: 150,
-              height: 50,
-              child: Platform.isAndroid
-                  ? RaisedButton(
-                      color: Colors.green,
-                      child: Text(
-                        "Calculate",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: calculateBMI)
-                  : CupertinoButton(
-                      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      color: CupertinoColors.activeBlue,
-                      child: Text("Calculate"),
-                      onPressed: calculateBMI)),
+            width: 150,
+            height: 50,
+            child: Platform.isAndroid
+                ? RaisedButton(
+                    color: Colors.green,
+                    child: Text(
+                      "Calculate",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: calculateBMI)
+                : CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                    color: CupertinoColors.activeBlue,
+                    child: Text("Calculate"),
+                    onPressed: calculateBMI),
+          ),
           SizedBox(height: 10),
           SizedBox(
-              width: 150,
-              height: 50,
-              child: Platform.isAndroid
-                  ? RaisedButton(
-                      color: Colors.red,
-                      child: Text(
-                        "Reset",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: clearUI)
-                  : CupertinoButton(
-                      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      color: CupertinoColors.systemRed,
-                      child: Text(
-                        "Reset",
-                      ),
-                      onPressed: clearUI)),
+            width: 150,
+            height: 50,
+            child: Platform.isAndroid
+                ? RaisedButton(
+                    color: Colors.red,
+                    child: Text(
+                      "Reset",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: clearUI)
+                : CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                    color: CupertinoColors.systemRed,
+                    child: Text(
+                      "Reset",
+                    ),
+                    onPressed: clearUI),
+          ),
         ],
       ),
     );
