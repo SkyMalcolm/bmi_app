@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -92,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _weightController.clear();
 
     setState(() {
-      _message = "Please enter your height and weight to see your BMI";
+      _message = "Please enter your height and weight";
       _bmi = null;
     });
   }
@@ -106,56 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          TextField(
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            controller: _heightController,
-            decoration: InputDecoration(
-              labelText: "Height (cm)",
-              icon: Icon(Icons.trending_up),
-            ),
-          ),
-          SizedBox(height: 20),
-          TextField(
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            controller: _weightController,
-            decoration: InputDecoration(
-              labelText: "Weight (kg)",
-              icon: Icon(Icons.line_weight),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: 150,
-            height: 50,
-            child: RaisedButton(
-                color: Colors.green,
-                child: Text(
-                  "Calculate",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: calculateBMI),
-          ),
-          SizedBox(height: 10),
-          SizedBox(
-            width: 150,
-            height: 50,
-            child: RaisedButton(
-                color: Colors.red,
-                child: Text(
-                  "Reset",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: clearUI),
-          ),
-          SizedBox(height: 15),
           Text(
             _bmi == null ? "0.0" : "Your BMI is: ${_bmi!.toStringAsFixed(2)}",
             style: TextStyle(
@@ -163,11 +115,94 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontSize: 25,
                 fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Text(
             _message,
-            textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          SizedBox(height: 40),
+          Platform.isAndroid
+              ? TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: _heightController,
+                  decoration: InputDecoration(
+                    labelText: "Height (cm)",
+                    icon: Icon(Icons.trending_up),
+                  ),
+                )
+              : CupertinoTextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: _heightController,
+                  prefix: Icon(Icons.trending_up),
+                  placeholder: "Height",
+                  style: TextStyle(height: 2)),
+          SizedBox(height: 5),
+          Platform.isAndroid
+              ? TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: _weightController,
+                  decoration: InputDecoration(
+                    labelText: "Weight (kg)",
+                    icon: Icon(Icons.line_weight),
+                  ),
+                )
+              : CupertinoTextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  controller: _weightController,
+                  prefix: Icon(Icons.line_weight),
+                  placeholder: "Weight",
+                  style: TextStyle(height: 2)),
+          SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 150,
+            height: 50,
+            child: Platform.isAndroid
+                ? RaisedButton(
+                    color: Colors.green,
+                    child: Text(
+                      "Calculate",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: calculateBMI)
+                : CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                    color: CupertinoColors.activeBlue,
+                    child: Text("Calculate"),
+                    onPressed: calculateBMI),
+          ),
+          SizedBox(height: 10),
+          SizedBox(
+            width: 150,
+            height: 50,
+            child: Platform.isAndroid
+                ? RaisedButton(
+                    color: Colors.red,
+                    child: Text(
+                      "Reset",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: clearUI)
+                : CupertinoButton(
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                    color: CupertinoColors.systemRed,
+                    child: Text(
+                      "Reset",
+                    ),
+                    onPressed: clearUI),
           ),
         ],
       ),
